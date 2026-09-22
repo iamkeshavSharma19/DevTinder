@@ -8,9 +8,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 
 export default function Login() {
-  const [emailId, setEmailId] = useState("Randy@gmail.com");
+  const [emailId, setEmailId] = useState("Brock@gmail.com");
 
-  const [password, setPassword] = useState("Randy@2468");
+  const [password, setPassword] = useState("Brock@2468");
   const [errorMessage, setErrorMessage] = useState("");
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
