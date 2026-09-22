@@ -49,3 +49,10 @@ Remaining:
 - Send/ignore the user card from feed
 - Signup New User
 - E2E Testing
+
+
+# Season 3
+# Deployment
+- Signup on AWS
+- Launch instance
+- chmod 400 <secret>.pem
