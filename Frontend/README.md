@@ -56,3 +56,4 @@ Remaining:
 - Signup on AWS
 - Launch instance
 - chmod 400 <secret>.pem
+- Install Node version 24.11.1
