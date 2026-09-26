@@ -10,16 +10,8 @@ import mongoose from "mongoose";
 
 export const connectDB = async () => {
   try {
-    //console.log("async code");
-    const promiseResult = await mongoose.connect(process.env.MONGODB_URI);
-
-    // console.log(promiseResult);
-
-    return promiseResult;
+    await mongoose.connect(process.env.MONGODB_URI);
   } catch (error) {
     console.log(error);
   }
 };
-
-
-

@@ -37,7 +37,7 @@ app.use("/", requestRouter);
 app.use("/", userRouter);
 
 connectDB()
-  .then((res) => {
+  .then(() => {
     console.log("Database connection established...");
 
     app.listen(PORT, (err) => {
@@ -45,6 +45,6 @@ connectDB()
       console.log(`App is listening on Port ${PORT}`);
     });
   })
-  .catch((err) => {
+  .catch(() => {
     console.log("Database cannot be connected");
   });
