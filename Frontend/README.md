@@ -72,3 +72,5 @@ Remaining:
   - sudo scp -r dist/\* /var/www/html/
   - Enable port 80 of your instance
 
+# Episode 02
+# Deploying The Backend
