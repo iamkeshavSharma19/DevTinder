@@ -87,3 +87,20 @@ Remaining:
 - pm2 delete npm
 - pm2 start npm --name "devtinder-backend" -- start
 
+- config nginx - /etc/nginx/sites-available/default
+
+nginx config :
+
+     server_name 51.20.56.78;
+     location /api/ {
+            proxy_pass http://localhost:7777/;
+            proxy_http_version 1.1;
+
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+          }
+
+- restart nginx => sudo systemctl restart nginx
+- Modify the BASEURL in frontend project to "/api"
