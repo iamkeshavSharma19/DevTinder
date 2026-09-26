@@ -50,10 +50,25 @@ Remaining:
 - Signup New User
 - E2E Testing
 
-
 # Season 3
+
 # Deployment
+
+# Episode 01
+
 - Signup on AWS
 - Launch instance
 - chmod 400 <secret>.pem
 - Install Node version 24.11.1
+- Git clone into Ubantu System
+- Frontend
+  - npm install -> dependencies install
+  - npm run build
+  - sudo apt update
+  - sudo apt install nginx
+  - sudo systemctl start nginx
+  - sudo systemctl enable nginx
+  - Copy code from dist(build files) to /var/www/html/
+  - sudo scp -r dist/\* /var/www/html/
+  - Enable port 80 of your instance
+
