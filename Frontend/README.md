@@ -73,4 +73,17 @@ Remaining:
   - Enable port 80 of your instance
 
 # Episode 02
+
 # Deploying The Backend
+
+- allowed ec2 instance public IP on Mongodb server
+- installed pm2 package
+- npm install pm2 -g
+- pm2 start npm -- start
+- pm2 logs
+- pm2 flush npm
+- pm2 list
+- pm2 stop npm
+- pm2 delete npm
+- pm2 start npm --name "devtinder-backend" -- start
+
