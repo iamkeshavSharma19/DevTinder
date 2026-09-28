@@ -104,3 +104,13 @@ nginx config :
 
 - restart nginx => sudo systemctl restart nginx
 - Modify the BASEURL in frontend project to "/api"
+
+# Episode 03
+
+# Adding a custom domain name
+
+- Purchased domain name from godaddy
+- signup on cloudfare & add a new domain name
+- change the nameservers on godaddy and point it to cloudfare
+- wait for some time till your nameservers are updated
+
