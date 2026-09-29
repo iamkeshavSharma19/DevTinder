@@ -37,3 +37,5 @@ export const Column2Images = [
 ];
 
 export const BASE_URL = "/api";
+
+
