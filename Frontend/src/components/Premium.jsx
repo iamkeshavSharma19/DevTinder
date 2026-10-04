@@ -1,14 +1,43 @@
 import { Check, Shield, Crown } from "lucide-react";
+import axios from "axios";
+import { BASE_URL } from "../utils/constants";
 
 const Premium = () => {
-  const handleBuySilver = () => {
-    console.log("Buy Silver Clicked");
-    // Integrate Razorpay / Stripe API here
-  };
+  const handleBuyClick = async (type) => {
+    const order = await axios.post(
+      BASE_URL + "/payment/create",
+      {
+        memberShipType: type,
+      },
+      {
+        withCredentials: true,
+      },
+    );
 
-  const handleBuyGold = () => {
-    console.log("Buy Gold Clicked");
-    // Integrate Razorpay / Stripe API here
+    const { amount, keyId, currency, notes, orderId } = order.data;
+
+    //?It should open a Razorpay Dialog Box.
+
+    const options = {
+      key: keyId,
+      amount,
+      currency,
+      name: "Dev Tinder",
+      description: "Connect to other developers",
+      order_id: orderId,
+
+      prefill: {
+        name: notes.firstName + " " + notes.lastName,
+        email: notes.emailId,
+        contact: "9999999999",
+      },
+      theme: {
+        color: "#F37254",
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
   };
 
   return (
@@ -78,7 +107,7 @@ const Premium = () => {
             </div>
 
             <button
-              onClick={handleBuySilver}
+              onClick={() => handleBuyClick("silver")}
               className="w-full py-3.5 rounded-2xl bg-linear-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-semibold text-sm font-['JetBrains_Mono'] transition-all active:scale-95 cursor-pointer shadow-lg shadow-pink-600/25"
             >
               Buy Silver
@@ -137,7 +166,7 @@ const Premium = () => {
             </div>
 
             <button
-              onClick={handleBuyGold}
+              onClick={() => handleBuyClick("gold")}
               className="w-full py-3.5 rounded-2xl bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-sm font-['JetBrains_Mono'] transition-all active:scale-95 cursor-pointer shadow-lg shadow-indigo-600/25"
             >
               Buy Gold

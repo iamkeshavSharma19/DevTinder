@@ -121,3 +121,10 @@ nginx config :
     - Sign up on Razorpay & complete KYC
     - Created a UI for premium page
     - Creating an API for createOrder In backend
+    - added my key And secret in env file.
+    - Initialised Razorpay in utils
+    - creating order on razorpay
+    - create Schema and Model
+    - saved the order in payments collection
+    - make the API dynamic
+    
