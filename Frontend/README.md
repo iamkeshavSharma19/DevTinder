@@ -114,3 +114,10 @@ nginx config :
 - change the nameservers on godaddy and point it to cloudfare
 - wait for some time till your nameservers are updated
 
+# Episode 07
+
+# Razorpay Payment Gateway Integration.
+
+    - Sign up on Razorpay & complete KYC
+    - Created a UI for premium page
+    - Creating an API for createOrder In backend
