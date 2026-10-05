@@ -1,8 +1,22 @@
 import { Check, Shield, Crown } from "lucide-react";
+import { Sparkles, CheckCircle2, ShieldCheck, Code2 } from "lucide-react";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
+import { useState } from "react";
 
 const Premium = () => {
+  const [isUserPremium, setIsUserPremium] = useState(false);
+
+  const verifyPremiumUser = async () => {
+    const res = await axios.get(BASE_URL + "/premium/verify", {
+      withCredentials: true,
+    });
+
+    if (res.data.isPremium) {
+      setIsUserPremium(true);
+    }
+  };
+
   const handleBuyClick = async (type) => {
     const order = await axios.post(
       BASE_URL + "/payment/create",
@@ -34,16 +48,17 @@ const Premium = () => {
       theme: {
         color: "#F37254",
       },
+      //?When the Payment dialog box is closed then this handler function will be called if the payment is successful
+      handler: verifyPremiumUser,
     };
 
     const rzp = new window.Razorpay(options);
     rzp.open();
 
     //?As soon as the payment is successful or payment is failed,razorpay will send a webhook to our backend.
-    
   };
 
-  return (
+  return !isUserPremium ? (
     <div className="min-h-screen w-full bg-[#030712] text-white flex flex-col items-center justify-center p-4 sm:p-8 pt-20 relative overflow-hidden font-sans">
       {/* Soft Ambient Background Glows */}
       <div className="absolute top-1/4 left-1/3 -translate-x-1/2 w-125 h-75 bg-pink-500/10 rounded-full blur-[140px] pointer-events-none" />
@@ -174,6 +189,62 @@ const Premium = () => {
             >
               Buy Gold
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  ) : (
+    <div className="min-h-screen w-full bg-[#030712] text-white flex flex-col items-center justify-center p-4 sm:p-8 relative overflow-hidden font-sans">
+      {/* Ambient Background Glows */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-125 h-87.5 bg-linear-to-tr from-indigo-600/20 via-purple-600/15 to-amber-500/15 rounded-full blur-[140px] pointer-events-none" />
+
+      {/* Background Grid Pattern */}
+      <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(#ffffff0a_1px,transparent_1px)] bg-size-[32px_32px]" />
+
+      <div className="relative z-10 max-w-lg w-full text-center space-y-8">
+        {/* Animated Glow Card Container */}
+        <div className="relative group bg-[#090d1f]/80 border border-slate-800 hover:border-amber-500/30 rounded-3xl p-10 backdrop-blur-2xl shadow-2xl shadow-indigo-500/10 transition-all duration-500">
+          {/* Subtle Outer Card Glow */}
+          <div className="absolute -inset-0.5 bg-linear-to-r from-amber-500/20 via-purple-500/20 to-indigo-500/20 rounded-3xl blur-md opacity-50 group-hover:opacity-100 transition duration-500 -z-10" />
+
+          <div className="space-y-6 flex flex-col items-center">
+            {/* Crown / Check Badge Icon */}
+            <div className="relative flex items-center justify-center">
+              <div className="w-20 h-20 rounded-2xl bg-linear-to-tr from-amber-500/20 via-indigo-500/20 to-purple-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-inner">
+                <Sparkles className="w-10 h-10 animate-pulse text-amber-400" />
+              </div>
+              <div className="absolute -bottom-2 -right-2 bg-[#030712] rounded-full p-1 border border-slate-800">
+                <CheckCircle2 className="w-6 h-6 text-emerald-400 fill-emerald-500/20" />
+              </div>
+            </div>
+
+            {/* Main Premium Badge Pill */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold font-['JetBrains_Mono'] tracking-wide uppercase">
+              <ShieldCheck className="w-4 h-4 text-amber-400" />
+              <span>DevTinder VIP</span>
+            </div>
+
+            {/* Core Message */}
+            <div className="space-y-2">
+              <h1 className="text-3xl sm:text-4xl font-extrabold font-['JetBrains_Mono'] tracking-tight text-white">
+                You Are a{" "}
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-amber-300 via-purple-300 to-indigo-300">
+                  Premium User
+                </span>
+              </h1>
+              <p className="text-xs text-slate-400 font-['JetBrains_Mono']">
+                All developer perks & unlimited matches are active on your
+                account.
+              </p>
+            </div>
+
+            <div className="h-px w-full bg-slate-800/80 my-2" />
+
+            {/* Developer Tagline */}
+            <div className="flex items-center gap-2 text-slate-400 text-xs font-['JetBrains_Mono']">
+              <Code2 className="w-4 h-4 text-indigo-400" />
+              <span>Happy Coding & Networking!</span>
+            </div>
           </div>
         </div>
       </div>

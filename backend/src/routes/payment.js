@@ -121,73 +121,28 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
     });
   }
 });
-// paymentRouter.post("/payment/webhook", async (req, res) => {
-//   try {
-//     const webhookSignature = req.headers["x-razorpay-signature"];
 
-//     // 1. Signature Verify (Testing ke liye log lagaya hai)
-//     const isWebhookValid = validateWebhookSignature(
-//       JSON.stringify(req.body),
-//       webhookSignature,
-//       process.env.RAZORPAY_WEBHOOK_SECRET,
-//     );
+//?Step3 ==> Payment status check API
+paymentRouter.get("/premium/verify", userAuth, async (req, res) => {
+  try {
+    const user = req.user;
 
-//     if (!isWebhookValid) {
-//       console.log("❌ Webhook Signature Invalid!");
-//       return res.status(400).json({
-//         success: false,
-//         message: "Webhook signature is invalid",
-//       });
-//     }
+    if (user.isPremium) {
+      return res.json({
+        isPremium: true,
+      });
+    }
 
-//     const event = req.body.event;
-//     const paymentDetails = req.body.payload.payment.entity;
-
-//     console.log(
-//       `📩 Webhook Event Received: ${event} for Order ID: ${paymentDetails.order_id}`,
-//     );
-
-//     // 2. Find Payment in DB
-//     const payment = await Payment.findOne({ orderId: paymentDetails.order_id });
-
-//     if (!payment) {
-//       console.log("❌ Payment record not found in DB!");
-//       return res
-//         .status(404)
-//         .json({ success: false, message: "Payment record not found" });
-//     }
-
-//     // Status update karo (captured, failed, etc.)
-//     payment.status = paymentDetails.status;
-//     await payment.save();
-
-//     // 3. ONLY UPGRADE USER IF PAYMENT IS CAPTURED
-//     if (event === "payment.captured") {
-//       const user = await User.findOne({ _id: payment.userId });
-
-//       if (user) {
-//         user.isPremium = true;
-//         // Safe access using optional chaining
-//         user.memberShipType = payment.notes?.memberShipType || "gold";
-//         await user.save();
-//         console.log(`🎉 User ${user._id} upgraded to Premium successfully!`);
-//       } else {
-//         console.log("❌ User not found for ID:", payment.userId);
-//       }
-//     }
-
-//     return res.status(200).json({
-//       success: true,
-//       message: "Webhook processed successfully",
-//     });
-//   } catch (error) {
-//     console.error("💥 Webhook Crash Error:", error.message);
-//     return res.status(500).json({
-//       success: false,
-//       message: "Something Went Wrong",
-//       error: error.message,
-//     });
-//   }
-// });
+    res.json({
+      isPremium: false,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Something Went Wrong",
+      error: error.message,
+    });
+  }
+});
 
 export default paymentRouter;
