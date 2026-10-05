@@ -12,6 +12,7 @@ import Feed from "./components/Feed";
 import Requests from "./components/Requests";
 import Signup from "./components/Signup";
 import Premium from "./components/Premium";
+import Chat from "./components/Chat";
 
 const App = () => {
   return (
@@ -28,7 +29,8 @@ const App = () => {
               <Route path="/connections" element={<Connections />} />
               <Route path="requests" element={<Requests />} />
               <Route path="/signup" element={<Signup />} />
-              <Route path="premium" element={<Premium />} />
+              <Route path="/premium" element={<Premium />} />
+              <Route path="/chat/:targetUserId" element={<Chat />} />
             </Route>
           </Routes>
         </BrowserRouter>

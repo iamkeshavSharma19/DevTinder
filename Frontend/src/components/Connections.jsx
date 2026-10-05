@@ -3,6 +3,7 @@ import { BASE_URL } from "../utils/constants";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addConnections } from "../utils/connectionSlice";
+import { Link } from "react-router-dom";
 
 const Connections = () => {
   const connections = useSelector((store) => store.connections);
@@ -110,9 +111,11 @@ const Connections = () => {
                     </h3>
 
                     {/* Scaled Button */}
-                    <button className="self-center sm:self-auto px-6 py-2.5 rounded-xl bg-indigo-600/20 border border-indigo-500/30 hover:bg-indigo-600 hover:border-indigo-500 text-indigo-300 hover:text-white text-sm font-semibold font-['JetBrains_Mono'] transition-all duration-200 cursor-pointer">
-                      Chat
-                    </button>
+                    <Link to={"/chat/" + _id}>
+                      <button className="self-center sm:self-auto px-6 py-2.5 rounded-xl bg-indigo-600/20 border border-indigo-500/30 hover:bg-indigo-600 hover:border-indigo-500 text-indigo-300 hover:text-white text-sm font-semibold font-['JetBrains_Mono'] transition-all duration-200 cursor-pointer">
+                        Chat
+                      </button>
+                    </Link>
                   </div>
 
                   {/* Age & Gender Tag */}
