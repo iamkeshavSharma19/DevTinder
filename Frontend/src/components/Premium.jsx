@@ -38,6 +38,9 @@ const Premium = () => {
 
     const rzp = new window.Razorpay(options);
     rzp.open();
+
+    //?As soon as the payment is successful or payment is failed,razorpay will send a webhook to our backend.
+    
   };
 
   return (

@@ -127,4 +127,10 @@ nginx config :
     - create Schema and Model
     - saved the order in payments collection
     - make the API dynamic
-    
+    - Setup Razorpay webhook for your dynamic api
+    - Setup RRazorpay webhook on your live APi
+
+- Ref - https://github.com/razorpay/razorpay-node/tree/master/documents
+- Ref - https://razorpay.com/docs/payments/server-integration/nodejs/integration-steps/#integrate-with-razorpay-payment-gateway
+- Ref - https://razorpay.com/docs/webhooks/validate-test/
+- Ref - https://razorpay.com/docs/webhooks/payloads/payments/

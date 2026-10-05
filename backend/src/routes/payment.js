@@ -3,6 +3,7 @@ import { userAuth } from "../middlewares/auth.js";
 import razorpayInstance from "../utils/razorpay.js";
 import { Payment } from "../models/Payment.js";
 import { memberShipAmount } from "../utils/constants.js";
+import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils.js";
 
 const paymentRouter = Router();
 
@@ -53,6 +54,37 @@ paymentRouter.post("/payment/create", userAuth, async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Something Went Wrong",
+    });
+  }
+});
+
+//?Step2 ==> Creating a web hook API
+paymentRouter.post("/payment/webhook", async (req, res) => {
+  try {
+    //!GETTING THE WEBHOOK SIGNATURE.
+    const webhookSignature = req.headers["X-Razorpay-Signature"];
+    const isWebhookValid = validateWebhookSignature(
+      JSON.stringify(req.body),
+      webhookSignature,
+      process.env.RAZORPAY_WEBHOOK_SECRET,
+    );
+
+    if (!isWebhookValid) {
+      return res.status(400).json({
+        success: false,
+        message: "Webhook signature is invalid",
+      });
+    }
+
+    //?if the web hook is valid, we need to find out whether the payment is failed or captured.
+
+    
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Something Went Wrong",
+      error: error.message,
     });
   }
 });
