@@ -4,6 +4,7 @@ import razorpayInstance from "../utils/razorpay.js";
 import { Payment } from "../models/Payment.js";
 import { memberShipAmount } from "../utils/constants.js";
 import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils.js";
+import { User } from "../models/user.js";
 
 const paymentRouter = Router();
 
@@ -78,8 +79,38 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 
     //?if the web hook is valid, we need to find out whether the payment is failed or captured.
 
-    
+    //?When you write req.body,Node.JS gives you access to an event Object.
 
+    //^If the web Hook is valid I will update my payment status in DB
+
+    //~Update the User as premium.
+
+    //~Then Return the success response (200) to razorpay
+
+    const paymentDetails = req.body.payload.payment.entity;
+
+    const payment = await Payment.findOne({ orderId: paymentDetails.order_id });
+
+    payment.status = paymentDetails.status;
+
+    await payment.save();
+
+    const user = User.findOne({ _id: payment.userId });
+
+    user.isPremium = true;
+    user.memberShipType = payment.notes.memberShipType;
+
+    // if (req.body.event === "payment.captured") {
+
+    // }
+
+    // if (req.body.event === "payment.failed") {
+    // }
+
+    return res.status(200).json({
+      success: true,
+      message: "Webhook received successfully",
+    });
   } catch (error) {
     res.status(500).json({
       success: false,

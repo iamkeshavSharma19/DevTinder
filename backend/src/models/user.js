@@ -3,8 +3,6 @@ import validator from "validator";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
-
-
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -84,6 +82,17 @@ const userSchema = new mongoose.Schema(
     skills: {
       type: [String],
     },
+
+    isPremium: {
+      type: Boolean,
+      default: false,
+    },
+
+    memberShipType: {
+      type: String,
+    },
+
+
   },
 
   { timestamps: true },
