@@ -1,6 +1,9 @@
 import { useParams } from "react-router-dom";
 import { Send } from "lucide-react";
 import { useState } from "react";
+import { useEffect } from "react";
+import { createSocketConnection } from "../utils/socket";
+import { useSelector } from "react-redux";
 
 const Chat = () => {
   const { targetUserId } = useParams();
@@ -10,6 +13,17 @@ const Chat = () => {
       text: "Hello",
     },
   ]);
+  const user = useSelector((store) => store.user);
+  
+
+  //?As soon as the page loads I want to connect to the backend Server
+  useEffect(() => {
+    //?This socket here will be an object.I will use this socket object to emit the events.
+    const socket = createSocketConnection();
+    //?userId => id of the loggedIn User.
+    //?targetUserId => id of that user whom the loggedIn User wants to chat with.Basically in the emit i pass whome are the 2 persons who want to chat with each other.
+    socket.emit("join", { userId, targetUserId });
+  }, []);
 
   return (
     <div className="relative min-h-screen w-full bg-[#020817] text-white overflow-y-auto pt-20 pb-12 flex flex-col items-center justify-center p-4 font-sans">
