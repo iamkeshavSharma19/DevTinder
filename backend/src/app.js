@@ -16,6 +16,7 @@ import profileRouter from "./routes/profile.js";
 import requestRouter from "./routes/request.js";
 import userRouter from "./routes/user.js";
 import paymentRouter from "./routes/payment.js";
+import chatRouter from "./routes/chat.js";
 
 const app = express();
 const PORT = process.env.PORT || 7777;
@@ -37,6 +38,7 @@ app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
 app.use("/", paymentRouter);
+app.use("/", chatRouter);
 
 //?Creating a server using http module for the socket.io
 const server = http.createServer(app);

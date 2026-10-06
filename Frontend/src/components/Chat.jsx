@@ -4,15 +4,38 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { createSocketConnection } from "../utils/socket";
 import { useSelector } from "react-redux";
+import axios from "axios";
+import { BASE_URL } from "../utils/constants";
+
 
 const Chat = () => {
   const { targetUserId } = useParams();
-
+  
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const user = useSelector((store) => store.user);
 
   const userId = user?._id;
+
+  const fetchChatMessages = async () => {
+    const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, {
+      withCredentials: true,
+    });
+    console.log(chat.data.messages);
+
+    //?Making the textMessage Simple
+    const chatMessages = chat?.data?.messages.map((msg) => {
+      return {
+        firstName: msg?.firstName,
+        lastName: msg?.lastName,
+        text: msg?.text,
+      };
+    });
+  };
+
+  useEffect(() => {
+    fetchChatMessages();
+  }, []);
 
   //?As soon as the page loads I want to connect to the backend Server.
   useEffect(() => {
@@ -116,7 +139,7 @@ const Chat = () => {
           <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-4">
             {messages.map((msg, index) => {
               const isMe = msg.firstName === user?.firstName;
-              
+
               return (
                 <div
                   key={index}
@@ -139,7 +162,6 @@ const Chat = () => {
                 </div>
               );
             })}
-            
           </div>
           {/* Outgoing Message UI Container */}
           <div className="flex flex-col items-end"></div>

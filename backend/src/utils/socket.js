@@ -71,7 +71,6 @@ export const initializeSocket = (server) => {
           //?STEP3 ==> SENDING THE MESSAGE TO A PARTICULAR ROOM AND EMIITING THE MESSAGERECEIVED EVENT
           //?Now here we are emitting the messageReceived Event, I will listen to this event in my frontend / on the client side.
           io.to(roomId).emit("messageReceived", { firstName, text });
-          s;
         } catch (error) {
           console.log(error);
         }
