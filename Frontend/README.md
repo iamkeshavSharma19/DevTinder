@@ -135,8 +135,10 @@ nginx config :
 - Ref - https://razorpay.com/docs/webhooks/validate-test/
 - Ref - https://razorpay.com/docs/webhooks/payloads/payments/
 
-
 # Episode 08
 
 # Real Time Chat using Web Socket (Socket.io)
 
+- Build the UI for a chat window on /chat/:targetUserId
+- Setup socket.io in backend
+- npm i socket.io
