@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
 import crypto from "node:crypto";
+import { Chat } from "../models/chat.js";
 
 const getSecretRoomId = (userId, targetUserId) => {
   return crypto
@@ -30,20 +31,53 @@ export const initializeSocket = (server) => {
       socket.join(roomId);
     });
 
-    socket.on("sendMessage", ({ firstName, userId, targetUserId, text }) => {
-      //?Suppose Virat wants to send message to Ron,So Virat emiited this sendMessage event from the frontend to our backend server,now backend has to make sure that it is sending the message back to Ron.
-      //?STEP1 ==> Whatever message I have got from the frontend I want to send it to a particular room.
+    socket.on(
+      "sendMessage",
+      async ({ firstName, userId, targetUserId, text }) => {
+        try {
+          //?Suppose Virat wants to send message to Ron,So Virat emiited this sendMessage event from the frontend to our backend server,now backend has to make sure that it is sending the message back to Ron.
+          //?STEP1 ==> Whatever message I have got from the frontend I want to send it to a particular room.
 
-      //?STEP2 ==> SETTING UP THE ROOM ID ONCE AGAIN
-      const roomId = getSecretRoomId(userId, targetUserId);
-      console.log(firstName + " " + text);
-      //?STEP3 ==> SENDING THE MESSAGE TO A PARTICULAR ROOM AND EMIITING THE MESSAGERECEIVED EVENT
-      //?Now here we are emitting the messageReceived Event, I will listen to this event in my frontend / on the client side.
-      io.to(roomId).emit("messageReceived", { firstName, text });
-    });
+          //?STEP2 ==> SETTING UP THE ROOM ID ONCE AGAIN
+          const roomId = getSecretRoomId(userId, targetUserId);
+          console.log(firstName + " " + text);
+          //!When someone sends the message to the Server.We will save those messages into our database.
+          //!CASE1 ==> If I am getting this sendMessage event there is a possibility that I am sending my first message ever to someone.It can be the first message.
+
+          //!CASE2 ==> There can be an existing chat,where I want to append messages.
+
+          //*If I am getting a message over here,I need to find out whether this chat exist earlier or not.If it exists push there.If the chat does'not exist, create a new One.
+
+          let chat = await Chat.findOne({
+            participants: {
+              $all: [userId, targetUserId],
+            },
+          });
+
+          if (!chat) {
+            chat = new Chat({
+              participants: [userId, targetUserId],
+              messages: [],
+            });
+          }
+
+          chat.messages.push({
+            senderId: userId,
+            text,
+          });
+
+          await chat.save();
+
+          //?STEP3 ==> SENDING THE MESSAGE TO A PARTICULAR ROOM AND EMIITING THE MESSAGERECEIVED EVENT
+          //?Now here we are emitting the messageReceived Event, I will listen to this event in my frontend / on the client side.
+          io.to(roomId).emit("messageReceived", { firstName, text });
+          s;
+        } catch (error) {
+          console.log(error);
+        }
+      },
+    );
 
     socket.on("disconnect", () => {});
   });
 };
-
-
