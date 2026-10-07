@@ -1,19 +1,19 @@
 import { useParams } from "react-router-dom";
 import { Send } from "lucide-react";
 import { useState } from "react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { createSocketConnection } from "../utils/socket";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 
-
 const Chat = () => {
   const { targetUserId } = useParams();
-  
+
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const user = useSelector((store) => store.user);
+  const messagesEndRef = useRef(null);
 
   const userId = user?._id;
 
@@ -26,12 +26,18 @@ const Chat = () => {
     //?Making the textMessage Simple
     const chatMessages = chat?.data?.messages.map((msg) => {
       return {
-        firstName: msg?.firstName,
-        lastName: msg?.lastName,
+        firstName: msg?.senderId?.firstName,
+        lastName: msg?.senderId?.lastName,
         text: msg?.text,
       };
     });
+    console.log(chatMessages);
+    setMessages(chatMessages);
   };
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   useEffect(() => {
     fetchChatMessages();
@@ -57,9 +63,12 @@ const Chat = () => {
     });
 
     //?LISTENING TO THE receiveMessage event.
-    socket.on("messageReceived", ({ firstName, text }) => {
+    socket.on("messageReceived", ({ firstName, lastName, text }) => {
       console.log(firstName + " : " + text);
-      setMessages((prevMessages) => [...prevMessages, { firstName, text }]);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { firstName, lastName, text },
+      ]);
     });
 
     //~Whenever my Chat component unmounts,you also need to do the cleanUp of the "joinChat" event.
@@ -76,6 +85,8 @@ const Chat = () => {
     socket.emit("sendMessage", {
       //?Who is sending the message
       firstName: user.firstName,
+      //?sending the lastName of sender as well
+      lastName: user.lastName,
       userId,
       //?to whom he is sending the message
       targetUserId,
@@ -148,7 +159,7 @@ const Chat = () => {
                   }`}
                 >
                   <span className="text-[10px] text-slate-400 mb-1 px-1 font-['JetBrains_Mono']">
-                    {msg.firstName}
+                    {msg.firstName + " " + msg.lastName}
                   </span>
                   <div
                     className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-xs leading-relaxed ${
@@ -163,8 +174,8 @@ const Chat = () => {
               );
             })}
           </div>
-          {/* Outgoing Message UI Container */}
-          <div className="flex flex-col items-end"></div>
+          {/* Dummy div anchor for auto scroll-to-bottom */}
+          <div ref={messagesEndRef} />
         </div>
 
         {/* Chat Input Footer UI */}

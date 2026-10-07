@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 import crypto from "node:crypto";
 import { Chat } from "../models/chat.js";
+import ConnectionRequest from "../models/connectionRequests.js";
 
 const getSecretRoomId = (userId, targetUserId) => {
   return crypto
@@ -33,7 +34,7 @@ export const initializeSocket = (server) => {
 
     socket.on(
       "sendMessage",
-      async ({ firstName, userId, targetUserId, text }) => {
+      async ({ firstName, lastName, userId, targetUserId, text }) => {
         try {
           //?Suppose Virat wants to send message to Ron,So Virat emiited this sendMessage event from the frontend to our backend server,now backend has to make sure that it is sending the message back to Ron.
           //?STEP1 ==> Whatever message I have got from the frontend I want to send it to a particular room.
@@ -41,6 +42,9 @@ export const initializeSocket = (server) => {
           //?STEP2 ==> SETTING UP THE ROOM ID ONCE AGAIN
           const roomId = getSecretRoomId(userId, targetUserId);
           console.log(firstName + " " + text);
+
+          //TODO Check if userId & targetUserId are friends
+
           //!When someone sends the message to the Server.We will save those messages into our database.
           //!CASE1 ==> If I am getting this sendMessage event there is a possibility that I am sending my first message ever to someone.It can be the first message.
 
@@ -70,7 +74,7 @@ export const initializeSocket = (server) => {
 
           //?STEP3 ==> SENDING THE MESSAGE TO A PARTICULAR ROOM AND EMIITING THE MESSAGERECEIVED EVENT
           //?Now here we are emitting the messageReceived Event, I will listen to this event in my frontend / on the client side.
-          io.to(roomId).emit("messageReceived", { firstName, text });
+          io.to(roomId).emit("messageReceived", { firstName, lastName, text });
         } catch (error) {
           console.log(error);
         }
